@@ -1,3 +1,25 @@
+class GetDataFromApi {
+  url = "";
+  data = null;
+
+  constructor(newURL) {
+    this.url = newURL;
+  }
+
+  async getData() {
+    if (this.data === null) {
+      await fetch(this.url)
+        .then(function (response) {
+          return response.json();
+        })
+        .then((data) => {
+          this.data = data;
+        });
+    }
+    return this.data;
+  }
+}
+
 class Header {
   placeToRenderHeader;
   logoSrc;
@@ -94,7 +116,7 @@ class Slider {
 
     section.sliders.forEach((sliderOptions) => {
       const sliderOption = document.createElement("label");
-      sliderOption.className = "slider__option";
+      sliderOption.className = "slider__option slider__option--explain";
 
       const input = document.createElement("input");
       input.type = "radio";
@@ -155,14 +177,62 @@ class VolgendeStap {
     this.input.placeholder = "John Doe";
     this.input.className = "volgendeStap__nameInput";
 
+    this.input.addEventListener("input", () => {
+      localStorage.setItem("FullName", this.input.value);
+      this.checkFullName();
+    });
+
     this.button = document.createElement("button");
     this.button.type = "submit";
-    this.button.className = "volgendeStap__button";
+    this.button.className =
+      "volgendeStap__button volgendeStap__button--disabled";
     this.button.textContent = "BEGIN VRAGENLIJST";
+    this.button.disabled = true; // Set disabled initially
 
     this.textContainer = document.createElement("p");
     this.textContainer.className = "volgendeStap__textContainer";
     this.textContainer.textContent = "Totaal 40 vragen";
+
+    this.button.onclick = this.startQuiz;
+  }
+
+  startQuiz = () => {
+    this.parentElement.innerHTML = "";
+    this.button = document.createElement("button");
+    this.button.type = "submit";
+    this.button.className =
+      "volgendeStap__button volgendeStap__button--disabled volgendeStap__button--margin";
+    this.button.textContent = "Volgende";
+    this.button.disabled = true;
+    this.GetDataFromApi = new GetDataFromApi("../data/questions.json");
+    this.GetDataFromApi.getData().then((data) => {
+      data.forEach((questionData) => {
+        const question = new Questions(questionData);
+        const questionElement = question.createQuestion();
+        this.parentElement.appendChild(questionElement);
+        this.parentElement.appendChild(this.button);
+        this.checkIfAnswered = new CheckIfAnswered();
+        this.button.onclick = this.addExtraPoints;
+      });
+    });
+  };
+
+  addExtraPoints = () => {
+    console.log("test");
+    this.parentElement.innerHTML = "";
+  };
+
+  checkFullName() {
+    const fullName = localStorage.getItem("FullName");
+    if (fullName) {
+      this.button.disabled = false;
+      this.button.className =
+        "volgendeStap__button volgendeStap__button--enabled";
+    } else {
+      this.button.disabled = true;
+      this.button.className =
+        "volgendeStap__button volgendeStap__button--disabled";
+    }
   }
 
   render() {
@@ -172,6 +242,158 @@ class VolgendeStap {
     this.container.appendChild(this.textContainer);
 
     this.parentElement.appendChild(this.container);
+
+    const fullName = localStorage.getItem("FullName");
+    if (fullName) {
+      this.input.value = fullName;
+      this.checkFullName();
+    }
+  }
+}
+
+class Questions {
+  constructor(questionData) {
+    this.questionNumber = questionData.questionNumber;
+    this.questionText = questionData.questionText;
+  }
+
+  createQuestion() {
+    const centerDiv = document.createElement("div");
+    centerDiv.className = "main--centerDiv";
+
+    const explanationText = document.createElement("p");
+    explanationText.className = "explanation__text";
+    explanationText.innerText = this.questionText;
+    centerDiv.appendChild(explanationText);
+
+    const slider = this.createSlider();
+    centerDiv.appendChild(slider);
+
+    return centerDiv;
+  }
+
+  createSlider() {
+    const slider = document.createElement("div");
+    slider.className = "slider";
+
+    const sliderTextWrapper = document.createElement("div");
+    sliderTextWrapper.className = "slider__textWrapper";
+
+    const sliderTextArray = ["Nooit", "Soms", "Altijd"];
+    sliderTextArray.forEach((text) => {
+      const sliderText = document.createElement("p");
+      sliderText.className = "slider__text";
+      sliderText.textContent = text;
+      sliderTextWrapper.appendChild(sliderText);
+    });
+
+    for (let i = 1; i <= 6; i++) {
+      const option = document.createElement("label");
+      option.className = "slider__option";
+
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = this.questionNumber;
+      radio.value = i;
+
+      const label = document.createElement("span");
+      label.className = "slider__option__label";
+      label.textContent = i;
+
+      option.appendChild(radio);
+      option.appendChild(label);
+
+      slider.appendChild(option);
+    }
+
+    slider.appendChild(sliderTextWrapper);
+
+    return slider;
+  }
+}
+
+class CheckIfAnswered {
+  constructor() {
+    this.button = document.querySelector(".volgendeStap__button");
+    this.questions = document.querySelectorAll(".slider");
+    this.init();
+  }
+
+  init() {
+    this.questions.forEach((question) => {
+      const inputs = question.querySelectorAll("input[type=radio]");
+      inputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          this.storeAnswer(input);
+          this.updateButtonState();
+        });
+      });
+    });
+  }
+
+  storeAnswer(input) {
+    const questionNumber = input.name;
+    const questionAnswer = input.value;
+    localStorage.setItem(questionNumber, questionAnswer);
+  }
+
+  updateButtonState() {
+    let allAnswered = true;
+
+    this.questions.forEach((question) => {
+      const inputs = question.querySelectorAll("input[type=radio]");
+      const isChecked = Array.from(inputs).some((input) => input.checked);
+
+      if (!isChecked) {
+        allAnswered = false;
+      }
+    });
+
+    if (allAnswered) {
+      this.button.disabled = false;
+      this.button.className =
+        "volgendeStap__button volgendeStap__button--enabled volgendeStap__button--margin";
+    } else {
+      this.button.disabled = true;
+      this.button.className =
+        "volgendeStap__button volgendeStap__button--disabled volgendeStap__button--margin";
+    }
+  }
+}
+
+class QuestionSelector {
+  constructor(questions) {
+    this.questions = questions;
+    this.selectedQuestions = [];
+  }
+
+  loadQuestions(questions) {
+    this.questions = questions;
+  }
+
+  addExtraPoints() {
+    const sortedQuestions = this.questions.sort(
+      (a, b) => b.questionAnswer - a.questionAnswer
+    );
+    const selectedQuestions = [];
+    let highestScore = null;
+
+    for (const question of sortedQuestions) {
+      const currentScore = question.questionAnswer;
+
+      if (highestScore === null) {
+        highestScore = currentScore;
+      }
+
+      if (currentScore < highestScore && selectedQuestions.length >= 10) {
+        break;
+      }
+
+      selectedQuestions.push(question);
+    }
+
+    this.selectedQuestions = selectedQuestions;
+    return this.selectedQuestions;
   }
 }
 
@@ -329,6 +551,43 @@ class App {
           { name: "isVaakVanToepassing2", value: "4", disabled: true },
           { name: "isVaakVanToepassing2", value: "5", disabled: true },
           { name: "isVaakVanToepassing2", value: "6", disabled: true },
+        ],
+      },
+
+      // Is zo nu en dan bij mij van toepassing 1:
+      {
+        title: "Is zo nu en dan bij mij van toepassing:",
+        sliders: [
+          { name: "isZoNuEnDanVanToepassing1", value: "1", disabled: true },
+          { name: "isZoNuEnDanVanToepassing1", value: "2", disabled: true },
+          { name: "isZoNuEnDanVanToepassing1", value: "3", disabled: true },
+          {
+            name: "isZoNuEnDanVanToepassing1",
+            value: "4",
+            checked: true,
+            disabled: true,
+          },
+
+          { name: "isZoNuEnDanVanToepassing1", value: "5", disabled: true },
+          { name: "isZoNuEnDanVanToepassing1", value: "6", disabled: true },
+        ],
+      },
+
+      // Is zo nu en dan bij mij van toepassing 2:
+      {
+        title: "",
+        sliders: [
+          { name: "isZoNuEnDanVanToepassing2", value: "1", disabled: true },
+          { name: "isZoNuEnDanVanToepassing2", value: "2", disabled: true },
+          { name: "isZoNuEnDanVanToepassing2", value: "3", disabled: true },
+          { name: "isZoNuEnDanVanToepassing2", value: "4", disabled: true },
+          {
+            name: "isZoNuEnDanVanToepassing2",
+            value: "5",
+            checked: true,
+            disabled: true,
+          },
+          { name: "isZoNuEnDanVanToepassing2", value: "6", disabled: true },
         ],
       },
 

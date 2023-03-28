@@ -14,6 +14,50 @@ body {
   font-size: 2rem;
 }
 
+@media screen and (max-width: 100rem) {
+  .slider {
+    width: 28% !important;
+  }
+}
+@media screen and (max-width: 70rem) {
+  .slider {
+    width: 30% !important;
+  }
+}
+@media screen and (max-width: 62.5rem) {
+  .slider {
+    width: 40% !important;
+  }
+}
+@media screen and (max-width: 50rem) {
+  .explanation__text {
+    max-width: 60vh !important;
+  }
+  .slider {
+    width: 45% !important;
+  }
+}
+@media screen and (max-width: 40rem) {
+  .slider {
+    width: 65% !important;
+  }
+}
+@media screen and (max-width: 30rem) {
+  .explanation__text {
+    max-width: 50vh !important;
+  }
+  .slider {
+    width: 75% !important;
+  }
+}
+@media screen and (max-width: 25rem) {
+  .slider {
+    width: 100% !important;
+  }
+  .slider__text {
+    display: none;
+  }
+}
 body {
   font-family: Ubuntu, sans-serif;
   min-height: 100vh;
@@ -62,6 +106,13 @@ body {
 }
 .main__sectionSlider {
   /* Display */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.main--centerDiv {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -174,6 +225,9 @@ body {
   transform: scale(1.1);
   font-size: 1.75rem;
 }
+.slider .slider__option--explain:hover {
+  background-color: #8bc8c8;
+}
 .slider .slider__option .slider__option__label {
   /* Positioning */
   position: absolute;
@@ -259,10 +313,22 @@ body {
   /* Border Radius */
   border-top-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
+}
+.volgendeStap__button--disabled {
+  background-color: #8bc8c8;
+}
+.volgendeStap__button--disabled:hover {
+  cursor: not-allowed;
+}
+.volgendeStap__button--enabled {
   /* Hover */
 }
-.volgendeStap__button:hover {
+.volgendeStap__button--enabled:hover {
+  background-color: #169894;
   cursor: pointer;
+}
+.volgendeStap__button--margin {
+  margin-top: 2rem;
 }
 .volgendeStap__textContainer {
   /* Color */

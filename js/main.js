@@ -218,8 +218,112 @@ class VolgendeStap {
   };
 
   addExtraPoints = () => {
-    console.log("test");
     this.parentElement.innerHTML = "";
+    const extraPointsH1 = document.createElement("h1"); // create h1 element
+    extraPointsH1.classList.add("title__text", "title--extraPoints"); // add class
+    extraPointsH1.innerText =
+      "Kijk nu naar je antwoorden en zoek de beweringen die je het hoogst gewaardeerd hebt. Kies hieruit 3 beweringen die het meest op jou van toepassing zijn. Geef deze opvattingen 4 punten extra.";
+    document.querySelector(".main").appendChild(extraPointsH1);
+
+    // Define a function to get the answer for a question from local storage
+    function getAnswerForQuestion(questionNumber) {
+      return localStorage.getItem(questionNumber);
+    }
+
+    this.JSONdata = new GetDataFromApi("../data/questions.json");
+    this.JSONdata.getData().then((data) => {
+      // Create an array to store the sorted questions
+      let sortedQuestions = [];
+
+      // Loop through each question and add the answer from local storage to it
+      data.forEach((question) => {
+        question.questionAnswer = getAnswerForQuestion(question.questionNumber);
+        sortedQuestions.push(question);
+      });
+
+      // Sort the questions based on their 'questionAnswer' property in descending order
+      sortedQuestions.sort((a, b) => b.questionAnswer - a.questionAnswer);
+
+      sortedQuestions.forEach((question) => {
+        // create div element with class and id
+        const centerDiv = document.createElement("div");
+        centerDiv.classList.add("main--centerDiv");
+        centerDiv.setAttribute("id", `4PointsDiv-${question.questionNumber}`);
+
+        // create paragraph element with class and id
+        const questionParagraph = document.createElement("p");
+        questionParagraph.classList.add("explanation__text");
+        questionParagraph.setAttribute(
+          "id",
+          `4Pointsquestion-${question.questionNumber}`
+        );
+        questionParagraph.textContent = `${question.questionText}`;
+
+        // create paragraph element with class and id
+        const answerParagraph = document.createElement("p");
+        answerParagraph.classList.add("explanation__text", "answerClass");
+        answerParagraph.setAttribute(
+          "id",
+          `4PointsAnswer-${question.questionNumber}`
+        );
+        answerParagraph.textContent = `Uw antwoord: ${question.questionAnswer}`;
+
+        // create button element with class and id
+        const questionButton = document.createElement("button");
+        questionButton.classList.add(
+          "volgendeStap__button",
+          "volgendeStap__button--enabled",
+          "main--marginButton"
+        );
+        questionButton.setAttribute(
+          "id",
+          `4PointsquestionButton-${question.questionNumber}`
+        );
+        questionButton.textContent = "Voeg 4 extra punten toe";
+
+        // append paragraph and button to div element
+        centerDiv.appendChild(questionParagraph);
+        centerDiv.appendChild(answerParagraph);
+        centerDiv.appendChild(questionButton);
+
+        // append centerDiv to an existing element with class 'main'
+        document.querySelector(".main").appendChild(centerDiv);
+
+        // add event listener to the button
+        questionButton.addEventListener("click", function () {
+          const div = this.parentElement;
+          const p = div.querySelector(".explanation__text");
+          const answerAmountText = div.querySelector(".answerClass");
+          const button = div.querySelector(".volgendeStap__button");
+
+          div.classList.toggle("main--extraPointsSelected");
+          p.classList.toggle("main--extraPointsSelectedText");
+          answerAmountText.classList.toggle("main--extraPointsSelectedText");
+          button.classList.toggle("main--extraPointsSelectedButton");
+
+          // toggle button inner text
+          if (button.textContent === "Voeg 4 extra punten toe") {
+            button.textContent = "Haal de 4 extra punten weg";
+            localStorage.setItem(
+              `${question.questionNumber}`,
+              parseInt(`${question.questionAnswer}`) + 4
+            );
+            answerAmountText.innerText = `Uw antwoord: ${
+              parseInt(question.questionAnswer) + 4
+            }`;
+          } else {
+            button.textContent = "Voeg 4 extra punten toe";
+            localStorage.setItem(
+              `${question.questionNumber}`,
+              parseInt(`${question.questionAnswer}`)
+            );
+            answerAmountText.innerText = `Uw antwoord: ${parseInt(
+              question.questionAnswer
+            )}`;
+          }
+        });
+      });
+    });
   };
 
   checkFullName() {

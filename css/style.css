@@ -25,6 +25,9 @@ body {
   }
 }
 @media screen and (max-width: 62.5rem) {
+  .title--extraPoints {
+    width: 80% !important;
+  }
   .slider {
     width: 40% !important;
   }
@@ -43,6 +46,12 @@ body {
   }
 }
 @media screen and (max-width: 30rem) {
+  .main--extraPointsSelected {
+    width: 100% !important;
+  }
+  .title--extraPoints {
+    width: 95% !important;
+  }
   .explanation__text {
     max-width: 50vh !important;
   }
@@ -118,6 +127,27 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-top: 2rem;
+}
+.main--marginButton {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.main--extraPointsSelected {
+  width: max-content;
+  border-top-right-radius: 2rem;
+  border-top-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+  color: white !important;
+  background-color: #19aeaa;
+}
+.main--extraPointsSelectedText {
+  color: white !important;
+}
+.main--extraPointsSelectedButton {
+  color: #19aeaa !important;
+  background-color: white !important;
 }
 
 .title {
@@ -138,6 +168,10 @@ body {
   color: #19aeaa;
   /* Padding */
   padding-bottom: 2rem;
+}
+.title--extraPoints {
+  width: 50%;
+  text-align: center;
 }
 
 .explanation {

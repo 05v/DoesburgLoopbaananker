@@ -166,8 +166,6 @@ body {
   font-size: 2.2rem;
   font-weight: 500;
   color: #19aeaa;
-  /* Padding */
-  padding-bottom: 2rem;
 }
 .title--extraPoints {
   width: 50%;
@@ -181,6 +179,7 @@ body {
   /* Color */
   color: #19aeaa;
   /* Padding */
+  padding: 2rem;
   padding-top: 2rem;
   padding-bottom: 2rem;
   /* Text Alignment */

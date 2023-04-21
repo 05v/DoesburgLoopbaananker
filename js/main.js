@@ -219,8 +219,8 @@ class VolgendeStap {
 
   addExtraPoints = () => {
     this.parentElement.innerHTML = "";
-    const extraPointsH1 = document.createElement("h1"); // create h1 element
-    extraPointsH1.classList.add("title__text", "title--extraPoints"); // add class
+    const extraPointsH1 = document.createElement("h1");
+    extraPointsH1.classList.add("title__text", "title--extraPoints");
     extraPointsH1.innerText =
       "Kijk nu naar je antwoorden en zoek de beweringen die je het hoogst gewaardeerd hebt. Kies hieruit 3 beweringen die het meest op jou van toepassing zijn. Geef deze opvattingen 4 punten extra.";
     document.querySelector(".main").appendChild(extraPointsH1);
@@ -257,7 +257,7 @@ class VolgendeStap {
           "id",
           `4Pointsquestion-${question.questionNumber}`
         );
-        questionParagraph.textContent = `${question.questionText}`;
+        questionParagraph.textContent = `${question.questionNumber}. ${question.questionText}`;
 
         // create paragraph element with class and id
         const answerParagraph = document.createElement("p");
@@ -288,6 +288,56 @@ class VolgendeStap {
 
         // append centerDiv to an existing element with class 'main'
         document.querySelector(".main").appendChild(centerDiv);
+
+        const buttons = document.querySelectorAll(".volgendeStap__button");
+        let activeCount = 0;
+
+        buttons.forEach((button) => {
+          button.onclick = () => {
+            console.log(activeCount);
+            if (button.classList.contains("active")) {
+              activeCount--;
+              button.classList.remove("active");
+              button.classList.remove("volgendeStap__button--enabled");
+              button.classList.add("volgendeStap__button--disabled");
+            } else if (activeCount < 3) {
+              activeCount++;
+              button.classList.add("active");
+              button.classList.add("volgendeStap__button--enabled");
+              button.classList.remove("volgendeStap__button--disabled");
+            }
+
+            if (activeCount === 3) {
+              handInButton.disabled = false;
+              handInButton.classList.remove("volgendeStap__button--disabled");
+              handInButton.classList.add("volgendeStap__button--enabled");
+            } else {
+              handInButton.disabled = true;
+              handInButton.classList.remove("volgendeStap__button--enabled");
+              handInButton.classList.add("volgendeStap__button--disabled");
+            }
+
+            if (activeCount === 3) {
+              buttons.forEach((button) => {
+                if (!button.classList.contains("active")) {
+                  button.disabled = true;
+                  button.classList.add("volgendeStap__button--disabled");
+                  button.classList.remove("volgendeStap__button--enabled");
+                } else {
+                  button.disabled = false;
+                  button.classList.add("volgendeStap__button--enabled");
+                  button.classList.remove("volgendeStap__button--disabled");
+                }
+              });
+            } else {
+              buttons.forEach((button) => {
+                button.disabled = false;
+                button.classList.remove("volgendeStap__button--disabled");
+                button.classList.add("volgendeStap__button--enabled");
+              });
+            }
+          };
+        });
 
         // add event listener to the button
         questionButton.addEventListener("click", function () {
@@ -323,8 +373,280 @@ class VolgendeStap {
           }
         });
       });
+      const handInButton = document.createElement("button");
+      handInButton.type = "submit";
+      handInButton.classList.add(
+        "volgendeStap__button",
+        "volgendeStap__button--disabled",
+        "volgendeStap__button--margin"
+      );
+      handInButton.disabled = true;
+      handInButton.textContent = "Volgende";
+
+      handInButton.addEventListener("click", () => {
+        this.handQuizIn();
+      });
+      this.parentElement.appendChild(handInButton);
     });
   };
+
+  handQuizIn() {
+    this.parentElement.innerHTML = "";
+
+    const mainElement = document.getElementsByClassName("main")[0];
+
+    const fullName = document.createElement("h2");
+    fullName.innerText = localStorage.getItem("FullName");
+    fullName.classList.add("title__text");
+    mainElement.appendChild(fullName);
+
+    const div = document.createElement("div");
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("id", "radar-chart");
+    div.appendChild(canvas);
+    mainElement.appendChild(div);
+
+    var TF = 0;
+    var AM = 0;
+    var AU = 0;
+    var ZE = 0;
+    var OC = 0;
+    var DV = 0;
+    var UI = 0;
+    var LS = 0;
+    for (var key in localStorage) {
+      if (localStorage.hasOwnProperty(key)) {
+        var value = localStorage[key];
+        if (!isNaN(parseFloat(value)) && isFinite(value)) {
+          var num = parseFloat(value);
+          if (key == 1 || key == 9 || key == 17 || key == 25 || key == 33) {
+            TF += num;
+          }
+          if (key == 2 || key == 10 || key == 18 || key == 26 || key == 34) {
+            AM += num;
+          }
+          if (key == 3 || key == 11 || key == 19 || key == 27 || key == 35) {
+            AU += num;
+          }
+          if (key == 4 || key == 12 || key == 20 || key == 28 || key == 36) {
+            ZE += num;
+          }
+          if (key == 5 || key == 13 || key == 21 || key == 29 || key == 37) {
+            OC += num;
+          }
+          if (key == 6 || key == 14 || key == 22 || key == 30 || key == 38) {
+            DV += num;
+          }
+          if (key == 7 || key == 15 || key == 23 || key == 31 || key == 39) {
+            UI += num;
+          }
+          if (key == 8 || key == 16 || key == 24 || key == 32 || key == 40) {
+            LS += num;
+          }
+        }
+      }
+    }
+    TF /= 5;
+    AM /= 5;
+    AU /= 5;
+    ZE /= 5;
+    OC /= 5;
+    DV /= 5;
+    UI /= 5;
+    LS /= 5;
+
+    localStorage.setItem("TF", TF);
+    localStorage.setItem("AM", AM);
+    localStorage.setItem("AU", AU);
+    localStorage.setItem("ZE", ZE);
+    localStorage.setItem("OC", OC);
+    localStorage.setItem("DV", DV);
+    localStorage.setItem("UI", UI);
+    localStorage.setItem("LS", LS);
+
+    var attributen = ["TF", "AM", "AU", "ZE", "OC", "DV", "UI", "LS"];
+
+    var scores = [];
+    for (var i = 0; i < attributen.length; i++) {
+      var score = parseFloat(localStorage.getItem(attributen[i]));
+      scores.push(score);
+    }
+
+    var config = {
+      type: "radar",
+      data: {
+        labels: attributen,
+        datasets: [
+          {
+            label: "Scores",
+            data: scores,
+            backgroundColor: "rgba(25, 174, 170, 0.2)",
+            borderColor: "rgba(25, 174, 170, 1)",
+            borderWidth: 2,
+          },
+        ],
+      },
+      options: {
+        scale: {
+          ticks: {
+            beginAtZero: true,
+            min: 0,
+            max: 10,
+            stepSize: 2,
+          },
+        },
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Scores per Attribuut",
+        },
+      },
+    };
+
+    var ctx = document.getElementById("radar-chart").getContext("2d");
+    new Chart(ctx, config);
+
+    const intro = document.createElement("h2");
+    intro.innerText = "Beschrijving van de loopbaanankers";
+    intro.classList.add("title__text");
+    mainElement.appendChild(intro);
+
+    const introInfo = document.createElement("p");
+    introInfo.innerText =
+      "Een korte beschrijving van de ankers staat hieronder vermeld. Lees de beschrijving van de ankers die het meest op jou van toepassing zijn en kijk welke daarvan voor jou herkenbaar zijn.";
+    introInfo.classList.add("explanation__text");
+    mainElement.appendChild(introInfo);
+    let uitlegScores = [
+      {
+        title: "Technisch/functioneel (TF)",
+        score: TF,
+        description:
+          "Mensen met dit anker kenmerken zich door hun kennis, vaardigheden of 'ambachtelijkheid' op een bepaald gebied. Zij zoeken voortdurend naar nieuwe uitdagingen binnen hun specifieke vakgebied, zodat zij zichzelf constant kunnen ontwikkelen en naar een hoger niveau kunnen tillen. Zij identificeren zichzelf met het uitoefenen en toepassen van hun specifieke kennis of vaardigheden en streven ernaar om de beste in hun vakgebied te worden. Hun grootste uitdaging is dat ze soms belast worden met taken die meer generalistisch of leidinggevend van aard zijn, waarin ze mislukken en die ze verafschuwen omdat deze taken hen dwingen om zich bezig te houden met competentiegebieden die niet aansluiten bij hun expertise.",
+      },
+      {
+        title: "Algemeen management (AM)",
+        score: AM,
+        description:
+          "Mensen met dit anker kenmerken zich door hun leiderschapskwaliteiten, hun vermogen om functies te integreren en verantwoordelijkheid te dragen voor een afdeling of organisatie. Hun loopbaanontwikkeling bestaat uit het bekleden van steeds hogere en meer verantwoordelijke posities binnen een organisatie. Ze willen verantwoordelijkheid dragen en aansprakelijk zijn voor het uiteindelijke resultaat. Ze schrijven het succes van een project of organisatie graag toe aan hun bekwame leiderschapsstijl. Hun vaardigheden worden gekenmerkt door analytische vaardigheden, het vermogen om effectief te communiceren met individuen en groepen, en de eigenschap om grote verantwoordelijkheden aan te kunnen.",
+      },
+      {
+        title: "Autonomie/onafhankelijkheid (AU)",
+        score: AU,
+        description:
+          "Mensen met dit anker hechten veel belang aan autonomie en onafhankelijkheid. Zij willen de vrijheid hebben om hun werk op hun eigen manier te definiëren en in te richten, en willen in staat zijn om autonoom te handelen. Vaak kiezen deze mensen voor een zelfstandig bestaan of voor een baan met een hoge mate van autonomie waarin zij zelf kunnen bepalen hoe en wanneer zij werken. Zij zijn bereid promoties of verbeteringen af te wijzen als daardoor hun autonomie in gevaar komt. Voorbeelden van beroepen waarin deze mensen kunnen gedijen zijn zelfstandige adviseurs, docenten of onderwijzers, (kleine) zelfstandige ondernemers, vertegenwoordigers of freelancers.",
+      },
+      {
+        title: "Zekerheid en stabiliteit (ZE)",
+        score: ZE,
+        description:
+          "Mensen met dit anker streven bij het opbouwen en inrichten van hun loopbaan naar stabiliteit en zekerheid op de langere termijn. Ze voelen zich pas echt op hun gemak wanneer ze in hun loopbaan een bepaald niveau van succes en stabiliteit hebben bereikt. Dit gevoel van succes omvat financiële zekerheid en de garantie van een vaste baan. Om deze zekerheden te behouden, zijn ze bereid te voldoen aan de verwachtingen van hun werkgever. Ze zijn minder geïnteresseerd in de inhoud van hun werk of in het nastreven van een hogere positie op basis van hun potentieel. Voor hen is het gevoel van zekerheid en veiligheid belangrijker dan de vraag wat voor werk ze precies doen.",
+      },
+      {
+        title: "Ondernemingsgerichte creativiteit (OC)",
+        score: OC,
+        description:
+          "Mensen met dit anker hebben de behoefte om hun persoonlijke creativiteit te uiten door iets op te bouwen dat groter is dan henzelf. Ze onderscheiden zich door hun vermogen om hun eigen onderneming te creëren als resultaat van hun eigen inspanningen. Ze identificeren zich volledig met hun onderneming en beschouwen het succes ervan als een bewijs van hun eigen talenten. Deze behoefte is zo sterk dat ze bereid zijn om de nodige mislukkingen te accepteren bij het streven naar ultiem succes. Ze zijn bereid om risico's te nemen en obstakels te overwinnen.",
+      },
+      {
+        title: "Dienstverlening/toewijding aan de zaak (DV)",
+        score: DV,
+        description:
+          "Mensen met dit anker hechten veel waarde aan werk dat bijdraagt aan een hoger doel en iets van waarde oplevert. Ze willen zich inzetten voor de leefbaarheid van de wereld, aandacht besteden aan milieuproblemen en bijdragen aan de ontwikkeling van mensen. Door middel van hun beroep en het werkveld waarin ze werkzaam zijn, willen ze uitdrukking geven aan zaken en onderwerpen waar zij waarde aan hechten, bijvoorbeeld door iets te geven, te genezen, te verzorgen, te begeleiden of te adviseren.",
+      },
+      {
+        title: "Zuivere uitdaging (UI)",
+        score: UI,
+        description:
+          "Mensen met dit anker hebben voornamelijk behoefte aan nieuwe kansen en variatie, aan schijnbaar onoverkomelijke obstakels of sterke concurrenten waartegen zij het kunnen opnemen. Het soort werk dat zij doen is minder belangrijk dan het plezier dat zij beleven aan het wedijveren met anderen of het overwinnen van obstakels of tegenstanders. Als zij er niet in slagen om steeds uitdagendere obstakels te vinden, kan het werk saai worden en zullen zij elders op zoek gaan naar nieuwe uitdagingen. Sommigen vinden hun uitdaging in intellectueel werk, sommigen in het analyseren en oplossen van complexe situaties en anderen in het concurreren met anderen.",
+      },
+      {
+        title: "Levensstijl (LS)",
+        score: LS,
+        description:
+          "Mensen met dit anker hechten waarde aan het integreren van werk en gezin. Het is voor hen van groot belang dat hun loopbaan, gezinsleven en persoonlijke waarden in balans zijn, zodat werk en leven aansluiten op hun persoonlijkheid en privéleven. Sommigen passen hun werk aan op de carrière van hun partner, terwijl anderen op zoek gaan naar een baan in de buurt van de omgeving waarin ze willen wonen, waar ze hun kinderen willen opvoeden of waar hun kinderen naar school kunnen gaan. Voor hen is een succesvol leven niet afhankelijk van een succesvolle loopbaan, maar van hoe het leven als geheel wordt ervaren en hoe zij zich daarin persoonlijk kunnen ontwikkelen. In de huidige tijd groeit de populariteit van dit anker steeds meer.",
+      },
+    ];
+
+    uitlegScores.sort((a, b) => b.score - a.score);
+
+    uitlegScores.forEach((uitlegScore) => {
+      const title = document.createElement("h2");
+      title.innerText = uitlegScore.title + " - Score: " + uitlegScore.score;
+      title.classList.add("title__text");
+      mainElement.appendChild(title);
+
+      const description = document.createElement("p");
+      description.innerText = uitlegScore.description;
+      description.classList.add("explanation__text");
+      mainElement.appendChild(description);
+    });
+
+    const resultsNextButton = document.createElement("button");
+    resultsNextButton.type = "submit";
+    resultsNextButton.classList.add(
+      "volgendeStap__button",
+      "volgendeStap__button--enabled",
+      "volgendeStap__button--margin"
+    );
+    resultsNextButton.disabled = false;
+    resultsNextButton.textContent = "Download Resultaten";
+
+    resultsNextButton.addEventListener("click", () => {
+      this.afterResults();
+    });
+    this.parentElement.appendChild(resultsNextButton);
+  }
+
+  afterResults() {
+    const downloadButton = document.querySelector(".volgendeStap__button");
+    downloadButton.remove();
+
+    window.scrollTo(0, 0);
+
+    html2canvas(document.body).then(function (canvas) {
+      const imageData = canvas.toDataURL("image/png");
+      const fullName = localStorage.getItem("FullName");
+      const downloadLink = document.createElement("a");
+      downloadLink.href = imageData;
+      downloadLink.download = `${fullName} Loopbaan Anker Resultaten.png`;
+      downloadLink.click();
+    });
+
+    this.thankYou();
+  }
+
+  thankYou() {
+    const mainElement = document.getElementsByClassName("main")[0];
+
+    this.parentElement.innerHTML = "";
+    const container = document.createElement("div");
+    container.classList.add("container");
+
+    const title = document.createElement("div");
+    title.classList.add("title");
+    const titleText = document.createElement("h1");
+    titleText.classList.add("title__text");
+    titleText.textContent = "Bedankt!";
+    title.appendChild(titleText);
+
+    const explanation = document.createElement("div");
+    explanation.classList.add("explanation");
+    const explanationText1 = document.createElement("p");
+    explanationText1.classList.add("explanation__text");
+    explanationText1.innerHTML =
+      "Er is zojuist een screenshot gedownload naar uw computer. Om deze screenshot naar de coach te sturen, kunt u deze als bijlage toevoegen aan een e-mail en deze verzenden naar <a href='mailto:email@cindy.com'>email@cindy.com</a>.";
+    const explanationText2 = document.createElement("p");
+    explanationText2.classList.add("explanation__text");
+    explanationText2.textContent = "U kunt de pagina nu afsluiten.";
+    explanation.appendChild(explanationText1);
+    explanation.appendChild(explanationText2);
+
+    container.appendChild(title);
+    container.appendChild(explanation);
+    mainElement.appendChild(container);
+  }
 
   checkFullName() {
     const fullName = localStorage.getItem("FullName");
@@ -367,7 +689,7 @@ class Questions {
 
     const explanationText = document.createElement("p");
     explanationText.className = "explanation__text";
-    explanationText.innerText = this.questionText;
+    explanationText.innerText = this.questionNumber + ". " + this.questionText;
     centerDiv.appendChild(explanationText);
 
     const slider = this.createSlider();

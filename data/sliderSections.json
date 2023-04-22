@@ -1,0 +1,218 @@
+[
+    {
+        "title": "Is nooit bij mij van toepassing:",
+        "sliders": [
+            {
+                "name": "nooitVanToepassing",
+                "value": "1",
+                "checked": true,
+                "disabled": true
+            },
+            {
+                "name": "nooitVanToepassing",
+                "value": "2",
+                "disabled": true
+            },
+            {
+                "name": "nooitVanToepassing",
+                "value": "3",
+                "disabled": true
+            },
+            {
+                "name": "nooitVanToepassing",
+                "value": "4",
+                "disabled": true
+            },
+            {
+                "name": "nooitVanToepassing",
+                "value": "5",
+                "disabled": true
+            },
+            {
+                "name": "nooitVanToepassing",
+                "value": "6",
+                "disabled": true
+            }
+        ]
+    },
+    {
+        "title": "Is vaak op mij van toepassing:",
+        "sliders": [
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "1",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "2",
+                "checked": true,
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "3",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "4",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "5",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing1",
+                "value": "6",
+                "disabled": true
+            }
+        ]
+    },
+    {
+        "title": "",
+        "sliders": [
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "1",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "2",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "3",
+                "checked": true,
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "4",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "5",
+                "disabled": true
+            },
+            {
+                "name": "isVaakVanToepassing2",
+                "value": "6",
+                "disabled": true
+            }
+        ]
+    },
+    {
+        "title": "Is zo nu en dan bij mij van toepassing:",
+        "sliders": [
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "1",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "2",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "3",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "4",
+                "checked": true,
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "5",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing1",
+                "value": "6",
+                "disabled": true
+            }
+        ]
+    },
+    {
+        "title": "",
+        "sliders": [
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "1",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "2",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "3",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "4",
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "5",
+                "checked": true,
+                "disabled": true
+            },
+            {
+                "name": "isZoNuEnDanVanToepassing2",
+                "value": "6",
+                "disabled": true
+            }
+        ]
+    },
+    {
+        "title": "Is altijd bij mij van toepassing:",
+        "sliders": [
+            {
+                "name": "altijdVanToepassing",
+                "value": "1",
+                "disabled": true
+            },
+            {
+                "name": "altijdVanToepassing",
+                "value": "2",
+                "disabled": true
+            },
+            {
+                "name": "altijdVanToepassing",
+                "value": "3",
+                "disabled": true
+            },
+            {
+                "name": "altijdVanToepassing",
+                "value": "4",
+                "disabled": true
+            },
+            {
+                "name": "altijdVanToepassing",
+                "value": "5",
+                "disabled": true
+            },
+            {
+                "name": "altijdVanToepassing",
+                "value": "6",
+                "checked": true,
+                "disabled": true
+            }
+        ]
+    }
+]

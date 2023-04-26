@@ -636,7 +636,7 @@ class ThankYou {
     const explanationText1 = document.createElement("p");
     explanationText1.classList.add("explanation__text"),
       (explanationText1.innerHTML =
-        "Er is zojuist een screenshot gedownload naar uw computer. Om deze screenshot naar de coach te sturen, kunt u deze als bijlage toevoegen aan een e-mail en deze verzenden naar <a href='mailto:email@cindy.com'>email@cindy.com</a>.");
+        "Er is zojuist een screenshot gedownload naar uw computer. Om deze screenshot naar de coach te sturen, kunt u deze als bijlage toevoegen aan een e-mail en deze verzenden naar <a href='mailto:info@doesburgcoaching.nl'>info@doesburgcoaching.nl</a>.");
     const explanationText2 = document.createElement("p");
     explanationText2.classList.add("explanation__text"),
       (explanationText2.textContent = "U kunt de pagina nu afsluiten."),

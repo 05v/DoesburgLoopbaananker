@@ -471,14 +471,15 @@ class HandQuizIn {
     this.parentElement.innerHTML = "";
     const mainElement = document.getElementsByClassName("main")[0],
       fullName = document.createElement("h2");
-    (fullName.innerText = localStorage.getItem("FullName")),
-      fullName.classList.add("title__text"),
-      mainElement.appendChild(fullName);
-    const div = document.createElement("div"),
-      canvas = document.createElement("canvas");
-    canvas.setAttribute("id", "radar-chart"),
-      div.appendChild(canvas),
-      mainElement.appendChild(div);
+    fullName.innerText = localStorage.getItem("FullName");
+    fullName.classList.add("title__text");
+    mainElement.appendChild(fullName);
+
+    const div = document.createElement("div");
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("id", "radar-chart");
+    div.appendChild(canvas);
+    mainElement.appendChild(div);
     var TF = 0,
       AM = 0,
       AU = 0,
@@ -534,8 +535,9 @@ class HandQuizIn {
       i++
     ) {
       var score = parseFloat(localStorage.getItem(attributen[i]));
-      scores.push(score);
+      scores.push({ attribute: attributen[i], score: score });
     }
+    scores.sort((a, b) => b.score - a.score);
     var config = {
         type: "radar",
         data: {
@@ -543,7 +545,7 @@ class HandQuizIn {
           datasets: [
             {
               label: "Scores",
-              data: scores,
+              data: scores.map((s) => s.score),
               backgroundColor: "rgba(25, 174, 170, 0.2)",
               borderColor: "rgba(25, 174, 170, 1)",
               borderWidth: 2,
@@ -569,20 +571,24 @@ class HandQuizIn {
       mainElement.appendChild(introInfo);
     const ankersApi = new GetDataFromApi("/data/loopbaanankers.json"),
       ankersData = await ankersApi.getData();
-    ankersData.sort((a, b) => b.score - a.score),
-      ankersData.forEach((ankerData) => {
-        const title = document.createElement("h2");
-        (title.innerText =
-          ankerData.title +
-          " - Score: " +
-          localStorage.getItem(ankerData.score)),
-          title.classList.add("title__text"),
-          mainElement.appendChild(title);
-        const description = document.createElement("p");
-        (description.innerText = ankerData.description),
-          description.classList.add("explanation__text"),
-          mainElement.appendChild(description);
-      });
+    ankersData.forEach((ankerData) => {
+      ankerData.score = parseFloat(localStorage.getItem(ankerData.score));
+    });
+    ankersData.sort((a, b) => b.score - a.score);
+    ankersData.forEach((ankerData) => {
+      ankerData.score = parseFloat(localStorage.getItem(ankerData.storageKey));
+    });
+    ankersData.sort((a, b) => b.score - a.score);
+    ankersData.forEach((ankerData) => {
+      const title = document.createElement("h2");
+      title.innerText = ankerData.title + " - Score: " + ankerData.score;
+      title.classList.add("title__text");
+      mainElement.appendChild(title);
+      const description = document.createElement("p");
+      description.innerText = ankerData.description;
+      description.classList.add("explanation__text");
+      mainElement.appendChild(description);
+    });
     const resultsNextButton = document.createElement("button");
     (resultsNextButton.type = "submit"),
       resultsNextButton.classList.add(
